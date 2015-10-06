@@ -111,40 +111,45 @@ func main() {
 
 	flag.Parse()
 
-	ctx := context.Background()
+	if *client_secret_file == "" || *gDrive_folder_id == "" || *gDrive_folder_id == "" {
+		fmt.Println("Please Input Access Token and Room Name")
+		os.Exit(-1)
+	} else {
 
-	b, err := ioutil.ReadFile(*client_secret_file)
-	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
+		ctx := context.Background()
+
+		b, err := ioutil.ReadFile(*client_secret_file)
+		if err != nil {
+			log.Fatalf("Unable to read client secret file: %v", err)
+		}
+
+		config, err := google.ConfigFromJSON(b, drive.DriveScope)
+		if err != nil {
+			log.Fatalf("Unable to parse client secret file to config: %v", err)
+		}
+
+		client := getClient(ctx, config)
+
+		srv, err := drive.New(client)
+		if err != nil {
+			log.Fatalf("Unable to create Drive service: %v", err)
+		}
+
+		fmt.Println("File Name -> ", *backup_package_file)
+		goFile, err := os.Open(*backup_package_file)
+		uploadfiles := new(drive.File)
+		p := &drive.ParentReference{Id: *gDrive_folder_id}
+		uploadfiles.Parents = []*drive.ParentReference{p}
+
+		currentTime := time.Now()
+		uploadfiles.Title = fmt.Sprintf("%04d%02d%02d-%02d%02d.tar.bz2", currentTime.Year(), currentTime.Month(), currentTime.Day(), currentTime.Hour(), currentTime.Minute())
+
+		r, err := srv.Files.Insert(uploadfiles).Media(goFile).Do()
+
+		if err != nil {
+			log.Fatalf("Unable to retrieve files.", err)
+		}
+
+		fmt.Println("Download URL = ", r.DownloadUrl, " \n ID = ", r.OriginalFilename, r.Id)
 	}
-
-	config, err := google.ConfigFromJSON(b, drive.DriveScope)
-	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
-	}
-
-	client := getClient(ctx, config)
-
-	srv, err := drive.New(client)
-	if err != nil {
-		log.Fatalf("Unable to create Drive service: %v", err)
-	}
-
-	fmt.Println("File Name -> ", *backup_package_file)
-	goFile, err := os.Open(*backup_package_file)
-	uploadfiles := new(drive.File)
-	p := &drive.ParentReference{Id: *gDrive_folder_id}
-	uploadfiles.Parents = []*drive.ParentReference{p}
-
-	currentTime := time.Now()
-	uploadfiles.Title = fmt.Sprintf("%04d%02d%02d-%02d%02d.tar.bz2", currentTime.Year(), currentTime.Month(), currentTime.Day(), currentTime.Hour(), currentTime.Minute())
-
-	r, err := srv.Files.Insert(uploadfiles).Media(goFile).Do()
-
-	if err != nil {
-		log.Fatalf("Unable to retrieve files.", err)
-	}
-
-	fmt.Println("Download URL = ", r.DownloadUrl, " \n ID = ", r.OriginalFilename, r.Id)
-
 }
