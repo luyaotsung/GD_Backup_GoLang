@@ -27,7 +27,11 @@ $ git clone https://github.com/luyaotsung/GD_Backup_GoLang.git
 ## Step 4 : Run the Sample 
 Build and run the sample using the following command from your working directory:
 ```
-$ go run quickstart.go
+$ go run main.go --help 
+  -backup_file="": Full Paht of backup file
+  -client_secret_file="": Full Path of Client Secret File
+  -gDrive_folder_id="": Folder ID of Google Drive
+
 ```
 The first time you run the sample, it will prompt you to authorize access:
 
