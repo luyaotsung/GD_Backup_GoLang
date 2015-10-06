@@ -14,9 +14,9 @@ Before you start please finish below steps [Reference Link](https://developers.g
 ## Step 2 : Prepare the workspace 
 1) Set the **GOPATH** environment variable to your working directory. 
 2) Get the Drive API Go client library and OAuth2 package using the following commands:
-'''
+```
 $ go get -u google.golang.org/api/drive/v2
 $ go get -u golang.org/x/oauth2/...
-'''
+```
 
 
