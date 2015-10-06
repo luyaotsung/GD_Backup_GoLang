@@ -1,8 +1,8 @@
-
 package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	//"strconv"
 	"time"
 
 	"golang.org/x/net/context"
@@ -100,12 +101,19 @@ type My_ID struct {
 
 // My Folder ID
 // Link ==> https://drive.google.com/drive/folders/0Bz1AlpFYTBpyfm1QUFI4SW8xaDNpVkJiWm05QTZ0S08tSDVPdzF1MzR0S3JGLVZZTXluN2c
-const luyaotsung_Lindox_Backup_id string = "0Bz1AlpFYTBpyfm1QUFI4SW8xaDNpVkJiWm05QTZ0S08tSDVPdzF1MzR0S3JGLVZZTXluN2c"
+//const luyaotsung_Lindox_Backup_id string = "0Bz1AlpFYTBpyfm1QUFI4SW8xaDNpVkJiWm05QTZ0S08tSDVPdzF1MzR0S3JGLVZZTXluN2c"
 
 func main() {
+
+	client_secret_file := flag.String("client_secret_file", "", "Full Path of Client Secret File")
+	gDrive_folder_id := flag.String("gDrive_folder_id", "", "Folder ID of Google Drive")
+	backup_package_file := flag.String("backup_file", "", "Full Paht of backup file")
+
+	flag.Parse()
+
 	ctx := context.Background()
 
-	b, err := ioutil.ReadFile("/home/Backup/Source/client_secret_37504509164-suvnccq460nhbjsah887lkat9ddud873.apps.googleusercontent.com.json")
+	b, err := ioutil.ReadFile(*client_secret_file)
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
 	}
@@ -122,35 +130,16 @@ func main() {
 		log.Fatalf("Unable to create Drive service: %v", err)
 	}
 
-	//r, err := srv.Files.List().MaxResults(10).Do()
-	//if err != nil {
-	//	log.Fatalf("Unable to retrieve files.", err)
-	//}
-	//fmt.Println("Files:")
-	//if len(r.Items) > 0 {
-	//	for _, i := range r.Items {
-	//		fmt.Printf("%s (%s)\n", i.Title, i.Id)
-	//	}
-	//} else {
-	//	fmt.Print("No files found.")
-	//}
-
-	//filename := os.Args[1]
-	filename := "/home/Backup/Backup.tar.bz2"
-	fmt.Println("File Name -> ", filename)
-	goFile, err := os.Open(filename)
+	fmt.Println("File Name -> ", *backup_package_file)
+	goFile, err := os.Open(*backup_package_file)
 	uploadfiles := new(drive.File)
-	p := &drive.ParentReference{Id: luyaotsung_Lindox_Backup_id}
+	p := &drive.ParentReference{Id: *gDrive_folder_id}
 	uploadfiles.Parents = []*drive.ParentReference{p}
 
 	currentTime := time.Now()
-	abc := fmt.Sprintf("%04d%02d%02d-%02d%02d.tar.bz2", currentTime.Year(), currentTime.Month(), currentTime.Day(), currentTime.Hour(), currentTime.Minute())
-
-	uploadfiles.Title = abc
+	uploadfiles.Title = fmt.Sprintf("%04d%02d%02d-%02d%02d.tar.bz2", currentTime.Year(), currentTime.Month(), currentTime.Day(), currentTime.Hour(), currentTime.Minute())
 
 	r, err := srv.Files.Insert(uploadfiles).Media(goFile).Do()
-
-	//srv.Files.Delete("0Bz1AlpFYTBpya2hhVTJldlEtOFk").Do()
 
 	if err != nil {
 		log.Fatalf("Unable to retrieve files.", err)
@@ -158,15 +147,4 @@ func main() {
 
 	fmt.Println("Download URL = ", r.DownloadUrl, " \n ID = ", r.OriginalFilename, r.Id)
 
-	//googleDrive_ID := new(My_ID)
-	//googleDrive_ID.Folder = luyaotsung_Lindox_Backup_id
-	//googleDrive_ID.File = r.Id
-
-	//usr, _ := user.Current()
-
-	//CacheDir := filepath.Join(usr.HomeDir, ".credentials")
-	//os.MkdirAll(CacheDir, 0700)
-	//saveID(filepath.Join(CacheDir, url.QueryEscape("id.json")), googleDrive_ID)
-
 }
-
