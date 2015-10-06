@@ -19,7 +19,7 @@ $ go get -u google.golang.org/api/drive/v2
 $ go get -u golang.org/x/oauth2/...
 ```
 
-** Step 3 : Get the sample 
+## Step 3 : Get the sample 
 ```
 git clone https://github.com/luyaotsung/GD_Backup_GoLang.git
 ```
