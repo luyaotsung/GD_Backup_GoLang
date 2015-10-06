@@ -19,9 +19,24 @@ $ go get -u google.golang.org/api/drive/v2
 $ go get -u golang.org/x/oauth2/...
 ```
 
-## Step 3 : Get the sample 
+## Step 3 : Get the Sample 
 ```
-git clone https://github.com/luyaotsung/GD_Backup_GoLang.git
+$ git clone https://github.com/luyaotsung/GD_Backup_GoLang.git
 ```
+
+## Step 4 : Run the Sample 
+Build and run the sample using the following command from your working directory:
+```
+$ go run quickstart.go
+```
+The first time you run the sample, it will prompt you to authorize access:
+
+Browse to the provided URL in your web browser.
+
+1. If you are not already logged into your Google account, you will be prompted to log in. If you are logged into multiple Google accounts, you will be asked to select one account to use for the authorization.
+2. Click the **Accept** button.
+3. Copy the code you're given, paste it into the command-line prompt, and press **Enter**.
+Authorization information is stored on the file system, so subsequent executions will not prompt for authorization.
+
 
 
