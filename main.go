@@ -112,7 +112,7 @@ func main() {
 	flag.Parse()
 
 	if *client_secret_file == "" || *gDrive_folder_id == "" || *gDrive_folder_id == "" {
-		fmt.Println("Please Input Access Token and Room Name")
+		fmt.Println("Please Input all arguments")
 		os.Exit(-1)
 	} else {
 
