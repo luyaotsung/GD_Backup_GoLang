@@ -11,5 +11,12 @@ Before you start please finish below steps [Reference Link](https://developers.g
 5. Click OK to dismiss the resulting dialog.
 6. Click the  (Download JSON) button to the right of the client ID. Move this file to your working directory and rename it **client_secret.json**.
 
+## Step 2 : Prepare the workspace 
+1) Set the **GOPATH** environment variable to your working directory. 
+2) Get the Drive API Go client library and OAuth2 package using the following commands:
+'''
+$ go get -u google.golang.org/api/drive/v2
+$ go get -u golang.org/x/oauth2/...
+'''
 
 
