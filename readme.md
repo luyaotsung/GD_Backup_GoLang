@@ -1,7 +1,7 @@
 ## GD_Backup_GoLang 
 Backup my cloud server data to specific google dirve folder 
 
-## Precondition 
+## Quick Start
 Before you start please finish below steps [Reference Link](https://developers.google.com/drive/web/quickstart/go)
 ### Step 1 : Enable the Drive API 
 1. Use [this wizard](https://console.developers.google.com/start/api?id=drive) to create or select a project in the Google Developers Console and automatically enable the API. Click the **Go to credentials** button to continue.
