@@ -111,7 +111,7 @@ func main() {
 
 	flag.Parse()
 
-	if *client_secret_file == "" || *gDrive_folder_id == "" || *gDrive_folder_id == "" {
+	if ( *client_secret_file == "" || *gDrive_folder_id == "" || *backup_package_file == "" ) {
 		fmt.Println("Please Input all arguments")
 		os.Exit(-1)
 	} else {
@@ -135,13 +135,17 @@ func main() {
 			log.Fatalf("Unable to create Drive service: %v", err)
 		}
 
-		fmt.Println("File Name -> ", *backup_package_file)
+		fmt.Println("Client Secret File -> ", *client_secret_file)
+		fmt.Println("Google Driver Folder ID -> ", *gDrive_folder_id)
+		fmt.Println("Backup File Name -> ", *backup_package_file)
+
 		goFile, err := os.Open(*backup_package_file)
 		uploadfiles := new(drive.File)
 		p := &drive.ParentReference{Id: *gDrive_folder_id}
 		uploadfiles.Parents = []*drive.ParentReference{p}
 
 		currentTime := time.Now()
+		
 		uploadfiles.Title = fmt.Sprintf("%04d%02d%02d-%02d%02d.tar.bz2", currentTime.Year(), currentTime.Month(), currentTime.Day(), currentTime.Hour(), currentTime.Minute())
 
 		r, err := srv.Files.Insert(uploadfiles).Media(goFile).Do()
@@ -150,6 +154,6 @@ func main() {
 			log.Fatalf("Unable to retrieve files.", err)
 		}
 
-		fmt.Println("Download URL = ", r.DownloadUrl, " \n ID = ", r.OriginalFilename, r.Id)
+		fmt.Println("\n\nDownload URL = ", r.DownloadUrl, " \n File ID = ", r.Id , "\n File Name = ",r.OriginalFilename)
 	}
 }
